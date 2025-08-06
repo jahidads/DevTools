@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTools Hub | Advanced Developer Resources</title>
+    <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f527.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #4a00e0;
+            --secondary: #8e2de2;
+            --accent: #00c9ff;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --tool-bg: rgba(255, 255, 255, 0.95);
+            --text-dark: #333;
+            --text-light: #666;
+            --success: #00d26a;
+            --warning: #ff9a00;
+            --danger: #ff3860;
+            --code-font: 'Roboto Mono', monospace;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark), #16213e);
+            color: var(--light);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Unique background elements */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.2;
+            filter: blur(30px);
+            animation: float 25s infinite ease-in-out;
+        }
+
+        .shape:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            top: 60%;
+            left: 80%;
+            animation-delay: -5s;
+        }
+
+        .shape:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            background: var(--secondary);
+            top: 30%;
+            left: 70%;
+            animation-delay: -10s;
+        }
+
+        .shape:nth-child(4) {
+            width: 350px;
+            height: 350px;
+            background: var(--accent);
+            top: 70%;
+            left: 15%;
+            animation-delay: -15s;
+        }
+
+        .shape:nth-child(5) {
+            width: 200px;
+            height: 200px;
+            background: var(--primary);
+            top: 20%;
+            left: 40%;
+            animation-delay: -20s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(50px, -30px) rotate(10deg);
+            }
+            50% {
+                transform: translate(-40px, 40px) rotate(-10deg);
+            }
+            75% {
+                transform: translate(30px, 50px) rotate(5deg);
+            }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--light);
+        }
+
+        .logo i {
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Content styling */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: #a0a0c0;
+            line-height: 1.6;
+        }
+
+        .divider {
+            height: 4px;
+            width: 100px;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            margin: 2rem auto;
+            border-radius: 2px;
+        }
+
+        /* Tool Filter */
+        .tool-filter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.7rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            color: var(--dark);
+        }
+
+        /* Categories */
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .category {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            color: var(--text-dark);
+        }
+
+        .category:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .category h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category h2 i {
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .tool-list {
+            list-style: none;
+        }
+
+        .tool-list li {
+            margin-bottom: 1.2rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: var(--tool-bg);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .tool-list li:hover {
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .tool-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tool-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tool-link {
+            text-decoration: none;
+            color: var(--secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background: rgba(142, 45, 226, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .tool-link:hover {
+            background: rgba(142, 45, 226, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .tool-description {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .tool-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .feature-tag {
+            background: rgba(0, 201, 255, 0.1);
+            color: var(--secondary);
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        /* Rating System */
+        .tool-rating {
+            display: flex;
+            gap: 3px;
+            margin-top: 8px;
+        }
+
+        .rating-star {
+            color: #ddd;
+            font-size: 0.9rem;
+        }
+
+        .rating-star.filled {
+            color: #ffc107;
+        }
+
+        /* Additional Sections */
+        .featured-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            color: var(--text-dark);
+        }
+
+        .featured-section h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .featured-card {
+            background: var(--tool-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .featured-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+        }
+
+        .featured-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .featured-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .featured-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        /* Newsletter */
+        .newsletter {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .newsletter::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+        .newsletter h2 {
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .newsletter p {
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subscribe-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subscribe-form input {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            font-size: 1rem;
+        }
+
+        .subscribe-form button {
+            background: var(--dark);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .subscribe-form button:hover {
+            background: #1f1f3a;
+        }
+
+        /* Code Snippet Section */
+        .code-snippets {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            color: var(--text-dark);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .code-snippets h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .snippet-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .snippet-card {
+            background: #2d2d3a;
+            border-radius: 10px;
+            padding: 1.5rem;
+            color: #f8f8f2;
+            font-family: var(--code-font);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow: auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .snippet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .snippet-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #f8f8f2;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .code {
+            white-space: pre-wrap;
+            margin-top: 10px;
+        }
+
+        .comment {
+            color: #6272a4;
+        }
+
+        .property {
+            color: #50fa7b;
+        }
+
+        .value {
+            color: #f1fa8c;
+        }
+
+        .selector {
+            color: #ff79c6;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 0 2rem;
+            color: #a0a0c0;
+            font-size: 0.9rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column a {
+            color: #a0a0c0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-column a:hover {
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                margin-top: 1rem;
+                gap: 1.5rem;
+            }
+            
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .category, .featured-section, .newsletter, .code-snippets {
+                padding: 1.5rem;
+            }
+            
+            .subscribe-form {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .subscribe-form input, .subscribe-form button {
+                border-radius: 5px;
+                width: 100%;
+            }
+            
+            .categories {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-tools"></i>
+            <span>DevTools Hub</span>
+        </div>
+        <div class="nav-links">
+            <a href="#home"><i class="fas fa-home"></i> Home</a>
+            <a href="#top-tools"><i class="fas fa-star"></i> Top Tools</a>
+            <a href="#resources"><i class="fas fa-book"></i> Resources</a>
+            <a href="#code"><i class="fas fa-code"></i> Code</a>
+        </div>
+    </nav>
+
+    <div class="container" id="home">
+        <header>
+            <h1>Advanced Developer Tools Hub</h1>
+            <p>Discover the best free online resources to streamline your development workflow, enhance your designs, and optimize your projects.</p>
+            <div class="divider"></div>
+        </header>
+
+        <div class="tool-filter">
+            <button class="filter-btn active">All Tools</button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Code & Debugging</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Design & UI</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Image & Assets</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Dev Resources</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Templates</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Miscellaneous</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Featured</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Top Picks</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">New Tools</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Popular Tools</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Community Favorites</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Trending</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Best Practices</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Learning Resources</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Accessibility</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Performance</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">SEO</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Security</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Open Source</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Collaboration</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Productivity</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Testing</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">APIs</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Frameworks</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Mobile Tools</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Browser Tools</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Animation</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Color Tools</a></button>
+            <button class="filter-btn"><a href="" target="_blank" style="color:inherit;text-decoration:none;">Typography</a></button>
+        </div>
+
+        <div class="categories" id="resources">
+            <div class="category">
+                <h2><i class="fas fa-code"></i> Code & Debugging</h2>
+                <ul class="tool-list">
+                    <li>
+                        <div class="tool-header">
+                            <div class="tool-title">
+                                <i class="fab fa-js"></i> JSFiddle
+                            </div>
+                            <a href="https://jsfiddle.net/" target="_blank" class="tool-link">
+                                Visit <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                        <span class="tool-description">Write and test HTML/CSS/JS online with live previews and collaboration features.</span>
+                        <div class="tool-features">
+                            <span class="feature-tag">Online IDE</span>
+                            <span class="feature-tag">Collaboration</span>
+                            <span class="feature-tag">Live Preview</span>
+                        </div>
+                        <div class="tool-rating">
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star"><i class="fas fa-star"></i></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tool-header">
+                            <div class="tool-title">
+                                <i class="fab fa-codepen"></i> CodePen
+                            </div>
+                            <a href="https://codepen.io/" target="_blank" class="tool-link">
+                                Visit <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                        <span class="tool-description">Frontend playground with community showcases, challenges, and inspiration.</span>
+                        <div class="tool-features">
+                            <span class="feature-tag">Social Coding</span>
+                            <span class="feature-tag">Showcase</span>
+                            <span class="feature-tag">Templates</span>
+                        </div>
+                        <div class="tool-rating">
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tool-header">
+                            <div class="tool-title">
+                                <i class="fas fa-bolt"></i> StackBlitz
+                            </div>
+                            <a href="https://stackblitz.com/" target="_blank" class="tool-link">
+                                Visit <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                        <span class="tool-description">Online IDE for Angular, React, Vue, and more with full-stack capabilities.</span>
+                        <div class="tool-features">
+                            <span class="feature-tag">Full Stack</span>
+                            <span class="feature-tag">Frameworks</span>
+                            <span class="feature-tag">Instant Setup</span>
+                        </div>
+                        <div class="tool-rating">
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star"><i class="fas fa-star"></i></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tool-header">
+                            <div class="tool-title">
+                                <i class="fas fa-magic"></i> Beautifier.io
+                            </div>
+                            <a href="https://beautifier.io/" target="_blank" class="tool-link">
+                                Visit <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                        <span class="tool-description">Format HTML, CSS, and JavaScript code for better readability and consistency.</span>
+                        <div class="tool-features">
+                            <span class="feature-tag">Code Formatting</span>
+                            <span class="feature-tag">Readability</span>
+                            <span class="feature-tag">Customization</span>
+                        </div>
+                        <div class="tool-rating">
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star"><i class="fas fa-star"></i></span>
+                            <span class="rating-star"><i class="fas fa-star"></i></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="category">
+                <h2><i class="fas fa-paint-brush"></i> Design & UI Tools</h2>
+                <ul class="tool-list">
+                    <li>
+                        <div class="tool-header">
+                            <div class="tool-title">
+                                <i class="fas fa-palette"></i> Coolors
+                            </div>
+                            <a href="https://coolors.co/" target="_blank" class="tool-link">
+                                Visit <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                        <span class="tool-description">Generate, explore and save perfect color palettes for your projects.</span>
+                        <div class="tool-features">
+                            <span class="feature-tag">Color Schemes</span>
+                            <span class="feature-tag">Palette Generator</span>
+                            <span class="feature-tag">Export</span>
+                        </div>
+                        <div class="tool-rating">
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star"><i class="fas fa-star"></i></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tool-header">
+                            <div class="tool-title">
+                                <i class="fas fa-font"></i> FontPair
+                            </div>
+                            <a href="https://fontpair.co/" target="_blank" class="tool-link">
+                                Visit <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                        <span class="tool-description">Discover perfect Google Font combinations for your next project.</span>
+                        <div class="tool-features">
+                            <span class="feature-tag">Typography</span>
+                            <span class="feature-tag">Font Pairing</span>
+                            <span class="feature-tag">Inspiration</span>
+                        </div>
+                        <div class="tool-rating">
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star"><i class="fas fa-star"></i></span>
+                            <span class="rating-star"><i class="fas fa-star"></i></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tool-header">
+                            <div class="tool-title">
+                                <i class="fas fa-icons"></i> Herolcons
+                            </div>
+                            <a href="https://herolicons.com/" target="_blank" class="tool-link">
+                                Visit <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                        <span class="tool-description">Beautiful open-source SVG icons with customizable styles and sizes.</span>
+                        <div class="tool-features">
+                            <span class="feature-tag">SVG Icons</span>
+                            <span class="feature-tag">Customizable</span>
+                            <span class="feature-tag">MIT License</span>
+                        </div>
+                        <div class="tool-rating">
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star"><i class="fas fa-star"></i></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tool-header">
+                            <div class="tool-title">
+                                <i class="fas fa-cube"></i> Ulverse.io
+                            </div>
+                            <a href="https://ulverse.io/" target="_blank" class="tool-link">
+                                Visit <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                        <span class="tool-description">Free animated HTML/CSS UI elements for modern web interfaces.</span>
+                        <div class="tool-features">
+                            <span class="feature-tag">UI Elements</span>
+                            <span class="feature-tag">Animations</span>
+                            <span class="feature-tag">Templates</span>
+                        </div>
+                        <div class="tool-rating">
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star filled"><i class="fas fa-star"></i></span>
+                            <span class="rating-star"><i class="fas fa-star"></i></span>
+                            <span class="rating-star"><i class="fas fa-star"></i></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+       
+        <!-- Featured Tools Section -->
+        <div class="featured-section" id="top-tools">
+            <h2><i class="fas fa-crown"></i> Top Developer Picks</h2>
+            <div class="featured-grid">
+                <div class="featured-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Responsively App</h3>
+                    <p>Test responsive design on multiple devices simultaneously with this free app.</p>
+                    <a href="https://responsively.app/" target="_blank" class="tool-link">Visit Site</a>
+                </div>
+                <div class="featured-card">
+                    <i class="fas fa-globe"></i>
+                    <h3>Can I use</h3>
+                    <p>Check browser compatibility tables for front-end web technologies.</p>
+                    <a href="https://caniuse.com/" target="_blank" class="tool-link">Visit Site</a>
+                </div>
+                <div class="featured-card">
+                    <i class="fas fa-search"></i>
+                    <h3>PageSpeed Insights</h3>
+                    <p>Analyze the performance of your web pages and get suggestions for improvement.</p>
+                    <a href="https://developers.google.com/speed/pagespeed/insights/" target="_blank" class="tool-link">Visit Site</a>
+                </div>
+                <div class="featured-card">
+                    <i class="fas fa-palette"></i>
+                    <h3>Adobe Color</h3>
+                    <p>Create color schemes and explore trending palettes for your designs.</p>
+                    <a href="https://color.adobe.com/" target="_blank" class="tool-link">Visit Site</a>
+                </div>
+                <div class="featured-card">
+                    <i class="fas fa-file-code"></i>
+                    <h3>JSON Formatter</h3>
+                    <p>Format and validate JSON data for better readability and debugging.</p>
+                    <a href="https://jsonformatter.curiousconcept.com/" target="_blank" class="tool-link">Visit Site</a>
+                </div>
+                <div class="featured-card">
+                    <i class="fab fa-google"></i>
+                    <h3>Web.dev</h3>
+                    <p>Google's free tools to improve performance, SEO, and accessibility.</p>
+                    <a href="https://web.dev/" target="_blank" class="tool-link">Visit Site</a>
+                </div>
+                <div class="featured-card">
+                    <i class="fas fa-icons"></i>
+                    <h3>Favicon.io</h3>
+                    <p>Create favicons from text, emoji, or images for your website.</p>
+                    <a href="https://favicon.io/" target="_blank" class="tool-link">Visit Site</a>
+                </div>
+                <div class="featured-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>SSL Labs</h3>
+                    <p>Test your SSL configuration and get detailed reports on security.</p>
+                    <a href="https://www.ssllabs.com/ssltest/" target="_blank" class="tool-link">Visit Site</a>
+                </div>
+                <div class="featured-card">
+                    <i class="fas fa-terminal"></i>
+                    <h3>Glitch</h3>
+                    <p>Create, remix, and share web apps with this collaborative coding platform.</p>
+                    <a href="https://glitch.com/" target="_blank" class="tool-link">Visit Site</a>
+                </div>
+                <div class="featured-card">
+                    <i class="fas fa-puzzle-piece"></i>
+                    <h3>DevDocs</h3>
+                    <p>Fast, offline documentation for web developers with a clean interface.</p>
+                    <a href="https://devdocs.io/" target="_blank" class="tool-link">Visit Site</a>
+                </div>
+                <div class="featured-card">
+                    <i class="fas fa-code-branch"></i>
+                    <h3>GitHub Gist</h3>
+                    <p>Share code snippets and notes with version control on GitHub.</p>
+                    <a href="https://gist.github.com/" target="_blank" class="tool-link">Visit Site</a>
+                </div>
+                <div class="featured-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>GitHub Insights</h3>
+                    <p>Analyze your GitHub repositories with advanced metrics and insights.</p>
+                    <a href="https://github.com/features/insights" target="_blank" class="tool-link">Visit Site</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-snippets" id="code">
+            <h2><i class="fas fa-code"></i> Useful Code Snippets</h2>
+            <div class="snippet-container">
+                <div class="snippet-card">
+                    <div class="snippet-header">
+                        <div class="snippet-title">CSS Gradient Background</div>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <div class="code">
+<span class="selector">.gradient-bg</span> {
+    <span class="property">background</span>: <span class="value">linear-gradient(135deg, #4a00e0, #8e2de2)</span>;
+    <span class="property">height</span>: <span class="value">100vh</span>;
+}
+                    </div>
+                </div>
+                <div class="snippet-card">
+                    <div class="snippet-header">
+                        <div class="snippet-title">Centering with Flexbox</div>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <div class="code">
+<span class="selector">.container</span> {
+    <span class="property">display</span>: <span class="value">flex</span>;
+    <span class="property">justify-content</span>: <span class="value">center</span>;
+    <span class="property">align-items</span>: <span class="value">center</span>;
+    <span class="property">height</span>: <span class="value">100vh</span>;
+}
+                    </div>
+                </div>
+                <div class="snippet-card">
+                    <div class="snippet-header">
+                        <div class="snippet-title">Responsive Image</div>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <div class="code">
+                        <span class="selector">.responsive-image</span> {
+    <span class="property">max-width</span>: <span class="value">100%</span>;
+    <span class="property">height</span>: <span class="value">auto</span>;
+}
+                    </div>
+                </div>
+
+                <div class="snippet-card">
+                    <div class="snippet-header">
+                        <div class="snippet-title">CSS Variables</div>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <div class="code">
+                        <span class="selector">:root</span> {
+    <span class="property">--primary-color</span>: <span class="value">#4a00e0</span>;
+    <span class="property">--secondary-color</span>: <span class="value">#8e2de2</span>;
+}
+                    </div>
+                </div>
+
+                <div class="snippet-card">
+                    <div class="snippet-header">
+                        <div class="snippet-title">CSS Flexbox Layout</div>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <div class="code">
+                        <span class="selector">.flex-container</span> {
+    <span class="property">display</span>: <span class="value">flex</span>;
+    <span class="property">flex-direction</span>: <span class="value">column</span>;
+    <span class="property">align-items</span>: <span class="value">center</span>;
+    <span class="property">justify-content</span>: <span class="value">center</span>;
+    <span class="property">height</span>: <span class="value">100vh</span>;
+}
+                </div>
+                </div>
+
+                <div class="snippet-card">
+                    <div class="snippet-header">
+                        <div class="snippet-title">CSS Grid Layout</div>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <div class="code">
+                        <span class="selector">.grid-container</span> {
+    <span class="property">display</span>: <span class="value">grid</span>;
+    <span class="property">grid-template-columns</span>: <span class="value">repeat(auto-fit, minmax(250px, 1fr))</span>;
+    <span class="property">gap</span>: <span class="value">20px</span>;
+}
+                </div>
+                </div>
+
+                <div class="snippet-card">
+                    <div class="snippet-header">
+                        <div class="snippet-title">Responsive Image</div>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <div class="code">
+                        <span class="selector">.responsive-image</span> {
+    <span class="property">max-width</span>: <span class="value">100%</span>;
+    <span class="property">height</span>: <span class="value">auto</span>;
+}
+                </div>
+                </div>
+
+                <div class="snippet-card">
+                    <div class="snippet-header">
+                        <div class="snippet-title">Responsive Video</div>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <div class="code">
+                        <span class="selector">.responsive-video</span> {
+    <span class="property">max-width</span>: <span class="value">100%</span>;
+    <span class="property">height</span>: <span class="value">auto</span>;
+}
+                </div>
+                </div>
+
+                <div class="snippet-card">
+                    <div class="snippet-header">
+                        <div class="snippet-title">CSS Animation</div>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <div class="code">
+                        <span class="selector">.fade-in</span> {
+    <span class="property">animation</span>: <span class="value">fadeIn 1s ease-in-out</span>;
+}
+                </div>
+                </div>
+                <div class="snippet-card">
+                    <div class="snippet-header">
+                        <div class="snippet-title">CSS Variables</div>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <div class="code">
+                        <span class="selector">:root</span> {
+    <span class="property">--primary-color</span>: <span class="value">#4a00e0</span>;
+    <span class="property">--secondary-color</span>: <span class="value">#8e2de2</span>;
+}
+                    </div>
+                </div>
+                <div class="snippet-card">
+                    <div class="snippet-header">
+                        <div class="snippet-title">CSS Flexbox Layout</div>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <div class="code">
+                        <span class="selector">.flex-container</span> {
+    <span class="property">display</span>: <span class="value">flex</span>;
+    <span class="property">flex-direction</span>: <span class="value">column</span>;
+    <span class="property">align-items</span>: <span class="value">center</span>;
+    <span class="property">justify-content</span>: <span class="value">center</span>;
+    <span class="property">height</span>: <span class="value">100vh</span>;
+}
+                </div>
+                </div>
+                <div class="snippet-card">
+                    <div class="snippet-header">
+                        <div class="snippet-title">CSS Grid Layout</div>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <div class="code">
+<span class="selector">.grid-container</span> {
+    <span class="property">display</span>: <span class="value">grid</span>;
+    <span class="property">grid-template-columns</span>: <span class="value">repeat(auto-fit, minmax(250px, 1fr))</span>;
+    <span class="property">gap</span>: <span class="value">20px</span>;
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="newsletter">
+            <h2>Stay Updated with New Tools</h2>
+            <p>Subscribe to our newsletter to receive updates on the latest free developer tools and resources.</p>
+            <form class="subscribe-form">
+                <input type="email" placeholder="Enter your email address" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>DevTools Hub</h3>
+                    <p>A curated collection of the best free tools and resources for web developers. We help you streamline your workflow and build better projects.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="https://jahidads.github.io/Portfolio/" target="_blank"><i class="fas fa-chevron-right"></i> Portfolio</a></li>
+                        <li><a href="https://jahidads.github.io/CyberShield/" target="_blank"><i class="fas fa-chevron-right"></i> Cybershield</a></li>
+                        <li><a href="https://jahidads.github.io/Cyber-Security/" target="_blank"><i class="fas fa-chevron-right"></i> Cybersecurity</a></li>
+                        <li><a href="https://jahidads.github.io/TeamPro/" target="_blank"><i class="fas fa-chevron-right"></i> Teampro</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Developer Website</h3>
+                    <ul>
+                        <li><a href="https://jahidads.github.io/business-portfolio/" target="_blank"><i class="fas fa-chevron-right"></i> BizName</a></li>
+                        <li><a href="https://jahidads.github.io/Developer-portfolio/" target="_blank"><i class="fas fa-chevron-right"></i> Developer</a></li>
+                        <li><a href="https://jahidads.github.io/my-traditional-website/" target="_blank"><i class="fas fa-chevron-right"></i> Traditional</a></li>
+                        <li><a href="https://jahidads.github.io/my-portfolio/" target="_blank"><i class="fas fa-chevron-right"></i> jahidads.pro</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Other Links</h3>
+                    <ul>
+                        <li><a href="https://jahidads.github.io/Web-Developer/" target="_blank"><i class="fas fa-chevron-right"></i> jahidads.dev</a></li>
+                        <li><a href="https://jahidads.github.io/Resume-Portfolio/" target="_blank"><i class="fas fa-chevron-right"></i> Resume.pro</a></li>
+                        <li><a href="https://jahidads.github.io/Blog/" target="_blank"><i class="fas fa-chevron-right"></i> Blog</a></li>
+                        <li><a href="https://jahidads.github.io/Webinars/" target="_blank"><i class="fas fa-chevron-right"></i> Webinars</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="social-links">
+                <a href="https://github.com/jahidads" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://x.com/jahidhasan_tw" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://bd.linkedin.com/in/jahidads" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://www.facebook.com/jahidads1" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/jahidhasan2.0ff/" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.youtube.com/@jahidads" target="_blank"><i class="fab fa-youtube"></i></a>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 DevTools Hub. Developed by 🎉Jahid Hasan.</p>
+                <p>All tools listed are property of their respective owners.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Add subtle interactive effect to background shapes
+        document.addEventListener('mousemove', (e) => {
+            const shapes = document.querySelectorAll('.shape');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            shapes.forEach((shape, index) => {
+                // Each shape moves at a different speed for parallax effect
+                const speed = 0.02 + (index * 0.01);
+                const moveX = (x - 0.5) * 100 * speed;
+                const moveY = (y - 0.5) * 100 * speed;
+                
+                shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+        });
+
+        // Newsletter form submission
+        document.querySelector('.subscribe-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input').value;
+            alert(`Thank you for subscribing with ${email}! You'll receive updates on new developer tools.`);
+            this.reset();
+        });
+
+        // Filter buttons
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Copy code snippets
+        const copyButtons = document.querySelectorAll('.copy-btn');
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const codeBlock = this.closest('.snippet-card').querySelector('.code');
+                const text = codeBlock.innerText;
+                
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalText = this.textContent;
+                    this.textContent = 'Copied!';
+                    
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                    }, 2000);
+                });
+            });
+        });
+
+        // Tool hover effect enhancement
+        const toolItems = document.querySelectorAll('.tool-list li');
+        toolItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(5px)';
+            });
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+    </script>
+</body>
+</html>
